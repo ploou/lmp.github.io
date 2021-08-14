@@ -6,22 +6,20 @@
   <meta name="keywords" content=" LAMMPS ">
   <meta name="description" content="重复文献需要注意的地方之力场参数的确定 | LAMMPS爱好者">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="重复文献需要注意的地方之力场参数的确定最近用一些通用力场做一些模拟，发现了一些需要注意的小细节，这里跟各位分享一下~ 一般AMBER[1]，CVFF[2]，CLAYFF[3]力场中的LJ势的表达势是这样的：  E&#x3D;\varepsilon_0[(\frac{\sigma_0}{r})^{12}-2(\frac{\sigma_0}{r})^{6}]&#x3D;\frac{A}{r^{12}}-\frac{B}{">
+<meta name="description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重复文献需要注意的地方之力场参数的确定">
-<meta property="og:url" content="https://ploou.github.io/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/index.html">
+<meta property="og:title" content="LAMMPS-learn-4">
+<meta property="og:url" content="https://ploou.github.io/2021/08/05/LAMMPS-learn-4/index.html">
 <meta property="og:site_name" content="LAMMPS爱好者">
-<meta property="og:description" content="重复文献需要注意的地方之力场参数的确定最近用一些通用力场做一些模拟，发现了一些需要注意的小细节，这里跟各位分享一下~ 一般AMBER[1]，CVFF[2]，CLAYFF[3]力场中的LJ势的表达势是这样的：  E&#x3D;\varepsilon_0[(\frac{\sigma_0}{r})^{12}-2(\frac{\sigma_0}{r})^{6}]&#x3D;\frac{A}{r^{12}}-\frac{B}{">
+<meta property="og:description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ploou.github.io/img/5_1.jpg">
-<meta property="og:image" content="https://ploou.github.io/img/5_2.jpg">
-<meta property="og:image" content="https://ploou.github.io/img/5_3.jpg">
+<meta property="og:image" content="https://ploou.github.io/img/logo.gif">
 <meta property="article:published_time" content="2021-08-05T13:21:28.000Z">
-<meta property="article:modified_time" content="2021-08-07T05:44:55.561Z">
+<meta property="article:modified_time" content="2021-08-14T02:53:14.846Z">
 <meta property="article:author" content="MD爱好者">
 <meta property="article:tag" content="LAMMPS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ploou.github.io/img/5_1.jpg">
+<meta name="twitter:image" content="https://ploou.github.io/img/logo.gif">
 
 
 <link rel="icon" href="/img/avatar.jpg">
@@ -244,19 +242,19 @@
             <span class="post-date" title="2021-07-31 17:34:53">2021/07/31</span>
         </a>
         
-        <a  class="全部文章 LAMMPS经验谈 "
-           href="/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/"
-           data-tag="LAMMPS"
-           data-author="" >
-            <span class="post-title" title="重复文献需要注意的地方之力场参数的确定">重复文献需要注意的地方之力场参数的确定</span>
-            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
-        </a>
-        
         <a  class="全部文章 LAMMPS基础 "
            href="/2021/08/05/LAMMPS-learn-4/"
            data-tag="LAMMPS"
            data-author="" >
             <span class="post-title" title="LAMMPS-learn-4">LAMMPS-learn-4</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS经验谈 "
+           href="/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="重复文献需要注意的地方之力场参数的确定">重复文献需要注意的地方之力场参数的确定</span>
             <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
         </a>
         
