@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hello, LAMMPS | LAMMPS爱好者</title>
+  <meta name="keywords" content=" LAMMPS ">
+  <meta name="description" content="Hello, LAMMPS | LAMMPS爱好者">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LAMMPS-learn-4">
+<meta property="og:url" content="https://ploou.github.io/2021/08/05/LAMMPS-learn-4/index.html">
+<meta property="og:site_name" content="LAMMPS爱好者">
+<meta property="og:description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ploou.github.io/img/logo.gif">
+<meta property="article:published_time" content="2021-08-05T13:21:28.000Z">
+<meta property="article:modified_time" content="2021-08-14T02:53:14.846Z">
+<meta property="article:author" content="MD爱好者">
+<meta property="article:tag" content="LAMMPS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ploou.github.io/img/logo.gif">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>MD爱好者</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/ploou"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/ploou-33"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:weig16@whu.edu.cn"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=496719965&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(6)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS基础">
+                        
+                        LAMMPS基础
+                        <small>(5)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS经验谈">
+                        
+                        LAMMPS经验谈
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+        <a 
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="6">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://docs.lammps.org/Manual.html">LAMMPS官方手册</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>LAMMPS</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a id="top" class="全部文章 LAMMPS基础 "
+           href="/2021/07/31/Hello-LAMMPS/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="Hello, LAMMPS">Hello, LAMMPS</span>
+            <span class="post-date" title="2021-07-31 17:34:53">2021/07/31</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/05/LAMMPS-learn-4/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-4">LAMMPS-learn-4</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS经验谈 "
+           href="/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="重复文献需要注意的地方之力场参数的确定">重复文献需要注意的地方之力场参数的确定</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/02/LAMMPS-learn-3/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-3">LAMMPS-learn-3</span>
+            <span class="post-date" title="2021-08-02 09:13:55">2021/08/02</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-2/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-2">LAMMPS-learn-2</span>
+            <span class="post-date" title="2021-08-01 11:24:16">2021/08/01</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-1/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-1">LAMMPS-learn-1</span>
+            <span class="post-date" title="2021-08-01 09:54:39">2021/08/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-Hello-LAMMPS" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Hello, LAMMPS</h1>
+    
+    <div class="article-meta">
+        
+        <span class="top"><a>置顶</a></span>
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="LAMMPS基础">LAMMPS基础</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color2">LAMMPS</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2021-08-01 14:05:08'>2021-07-31 17:34</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5ubuntu%E7%B3%BB%E7%BB%9F%E4%B8%BA%E4%BE%8B%EF%BC%8Ccentos%E5%BA%94%E8%AF%A5%E6%98%AFsudo-yum-y-install-xxxx"><span class="toc-text">(以ubuntu系统为例，centos应该是sudo yum -y install xxxx)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mpich3%E7%9A%84%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B%E4%B8%8E%E4%BB%8B%E7%BB%8D%E7%9A%84fftw3%E4%B8%80%E6%A0%B7"><span class="toc-text">mpich3的安装流程与介绍的fftw3一样</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5%EF%BC%8C%E5%8D%95%E6%A0%B8%E5%B0%B1%E8%BE%93%E5%85%A5make%E5%B0%B1%E8%A1%8C%EF%BC%8C%E4%B8%8D%E8%BF%87%E4%BC%9A%E6%9C%89%E7%82%B9%E6%85%A2%EF%BC%8C%E5%A4%9A%E6%A0%B8%E5%B0%B1%E8%BE%93%E5%85%A5make-j-n-n%E4%B8%BA%E6%A0%B8%E6%95%B0"><span class="toc-text">编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%BC%8F%E7%BC%96%E8%AF%91%E5%89%8D%E6%8A%8A%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E5%8C%85%E8%A3%85%E4%B8%8A%EF%BC%8C%E4%BE%8B%E5%A6%82%E8%BF%99%E9%87%8C%E5%AE%89%E8%A3%85manybody%E8%BF%99%E4%B8%AA%E5%8C%85"><span class="toc-text">正式编译前把所需要的包装上，例如这里安装manybody这个包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%BD%93win%E4%B8%8B%E5%B0%86%E6%96%87%E4%BB%B6%E4%B8%8E%E6%8B%B7%E8%B4%9D%E5%88%B0%E6%A1%8C%E9%9D%A2%EF%BC%8C%E4%BE%BF%E4%BA%8E%E9%9A%8F%E6%97%B6%E8%B0%83%E7%94%A8"><span class="toc-text">相当win下将文件与拷贝到桌面，便于随时调用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%A6%86%E7%9B%96%E4%BB%A5%E5%89%8D%E7%9A%84%E6%97%A7%E7%89%88"><span class="toc-text">直接覆盖以前的旧版~</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%B3%E6%8A%8A%E6%96%B0%E7%BC%96%E8%AF%91%E5%BE%97%E5%88%B0%E7%9A%84lmp-mpi%E6%8D%A2%E4%B8%AA%E5%90%8D%E5%AD%97%E4%B8%8E%E4%B9%8B%E5%89%8D%E7%9A%84%E6%97%A7%E7%89%88%E5%85%B1%E5%AD%98%EF%BC%8C%E6%83%B3%E8%B0%83%E7%94%A8%E5%93%AA%E4%B8%AA%E7%94%A8%E5%93%AA%E4%B8%AA"><span class="toc-text">即把新编译得到的lmp_mpi换个名字与之前的旧版共存，想调用哪个用哪个~</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%98%B6%E6%AE%B5%EF%BC%8Cxxx-xxx-xxx%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84%EF%BC%8C%E9%80%89%E4%B8%AA%E7%A9%BA%E9%97%B4%E5%A4%9F%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%B0%B1%E8%A1%8C"><span class="toc-text">配置阶段，xxx&#x2F;xxx&#x2F;xxx为自定义的目录路径，选个空间够的位置就行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5%EF%BC%8C%E5%8D%95%E6%A0%B8%E5%B0%B1%E8%BE%93%E5%85%A5make%E5%B0%B1%E8%A1%8C%EF%BC%8C%E4%B8%8D%E8%BF%87%E4%BC%9A%E6%9C%89%E7%82%B9%E6%85%A2%EF%BC%8C%E5%A4%9A%E6%A0%B8%E5%B0%B1%E8%BE%93%E5%85%A5make-j-n-n%E4%B8%BA%E6%A0%B8%E6%95%B0-1"><span class="toc-text">编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9fftw"><span class="toc-text">对fftw</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#x-x-x%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84"><span class="toc-text">x&#x2F;x&#x2F;x为自定义的目录路径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9mpich%EF%BC%88%E4%B8%8Efftw%E4%B8%80%E6%A0%B7%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%89"><span class="toc-text">对mpich（与fftw一样的设置）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%94%AF%E6%8C%81%E7%9A%84%E5%8C%85%EF%BC%8C%E4%B8%8D%E5%87%BA%E6%84%8F%E5%A4%96%E5%BA%94%E8%AF%A5%E5%85%A8%E6%98%AFno-%E8%B7%9F%E4%B8%AA%E4%BA%BA%E7%94%B5%E8%84%91%E7%89%88%E9%87%8C%E7%9A%84%E8%AF%B4%E6%98%8E%E4%B8%80%E6%A0%B7%EF%BC%8C%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88%E5%8C%85%E8%A3%85%E4%BB%80%E4%B9%88%E5%8C%85"><span class="toc-text">查看所支持的包，不出意外应该全是no,跟个人电脑版里的说明一样，需要什么包装什么包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%BC%8F%E7%BC%96%E8%AF%91%E5%89%8D%E6%8A%8A%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E5%8C%85%E8%A3%85%E4%B8%8A%EF%BC%8C%E4%BE%8B%E5%A6%82%E8%BF%99%E9%87%8C%E5%AE%89%E8%A3%85manybody%E8%BF%99%E4%B8%AA%E5%8C%85-1"><span class="toc-text">正式编译前把所需要的包装上，例如这里安装manybody这个包</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>想要玩LAMMPS，首先你得安装LAMMPS，所以本blog的第一篇文章是Linux版LAMMPS安装总结（个人电脑版+离线服务器版）</p>
+<p>一.个人电脑版（只要是linux系统即可，不分centos还是ubuntu，把网连好就可以开始了）<br>1.以管理员身份先装一些必备的辅助软件<br>注：以下指令输入时要注意空格~ #号后面全是注释</p>
+<blockquote>
+<h1 id="以ubuntu系统为例，centos应该是sudo-yum-y-install-xxxx"><a href="#以ubuntu系统为例，centos应该是sudo-yum-y-install-xxxx" class="headerlink" title="(以ubuntu系统为例，centos应该是sudo yum -y install xxxx)"></a>(以ubuntu系统为例，centos应该是sudo yum -y install xxxx)</h1><p>sudo apt-get upgrade<br>sudo apt install build-essential<br>sudo apt install g++<br>sudo apt install gcc<br>sudo apt install gfortran</p>
+</blockquote>
+<p>2.以管理员身份安装fftw，mpich，不需要设置环境变量（管理员身份表示默认设置环境变量）~<br>ps:建议专弄一个空的文件夹用于存放安装mpich,fftw以及LAMMPS</p>
+<blockquote>
+<h1 id="mpich3的安装流程与介绍的fftw3一样"><a href="#mpich3的安装流程与介绍的fftw3一样" class="headerlink" title="mpich3的安装流程与介绍的fftw3一样"></a>mpich3的安装流程与介绍的fftw3一样</h1><p>tar -zxvf  fftw-3.3.8.tar.gz #下载好安装包后进行解压<br>cd  fftw-3.3.8 #进入解压后的文件夹<br>sudo ./configure  #配置阶段<br>sudo make (或者输入make -j 4)</p>
+<h1 id="编译阶段，单核就输入make就行，不过会有点慢，多核就输入make-j-n-n为核数"><a href="#编译阶段，单核就输入make就行，不过会有点慢，多核就输入make-j-n-n为核数" class="headerlink" title="编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)"></a>编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)</h1><p>sudo make install  #最后安装</p>
+</blockquote>
+<p>以防万一，安装完后检查一下~</p>
+<blockquote>
+<p>which       mpirun<br>which       fftw-wisdom<br><img src="/img/1_1.png" alt="若安装成功则会输出一个路径"></p>
+</blockquote>
+<p>3.安装LAMMPS</p>
+<blockquote>
+<p>tar -zxvf lammps-stable.tar.gz  #解压文件<br>cd  lammps-3Mar20/src/ #进入解压后文件夹钟的src文件夹里面<br>make ps       #查看所支持的包，不出意外应该全是no<br><img src="/img/1_2.png" alt="包的情况"><br>make yes-manybody  </p>
+<h1 id="正式编译前把所需要的包装上，例如这里安装manybody这个包"><a href="#正式编译前把所需要的包装上，例如这里安装manybody这个包" class="headerlink" title="正式编译前把所需要的包装上，例如这里安装manybody这个包"></a>正式编译前把所需要的包装上，例如这里安装manybody这个包</h1><p>make mpi        #最后正式安装</p>
+</blockquote>
+<p>安装成功后目录下会出现lmp_mpi这个文件，如果找不到，则表示安装失败~</p>
+<p>安装成功后设置如下（这个操作只适合个人电脑以及有服务器管理员权限的同学）~</p>
+<blockquote>
+<p>sudo  cp lmp_mpi /usr/local/bin (或者/usr/bin)</p>
+<h1 id="相当win下将文件与拷贝到桌面，便于随时调用"><a href="#相当win下将文件与拷贝到桌面，便于随时调用" class="headerlink" title="相当win下将文件与拷贝到桌面，便于随时调用"></a>相当win下将文件与拷贝到桌面，便于随时调用</h1><p>which lmp_mpi #检查一下<br><img src="/img/1_3.jpg" alt="若安装成功则会输出一个路径"></p>
+</blockquote>
+<p>PS：<br>有同学肯定会疑惑，我刚学，不知道哪些包需要，这点不需要担心，可以先啥包都不装，或者就装个manybody包也行，先走个安装流程，再运行个例子玩玩，后期知道自己需要什么包之后再重新补包即可（注意，有些包的安装不是简单的make yes就能搞定的，需要仔细阅读包中的README，查看对应的安装操作，例如voronoi包，则需要额外下载vornoni软件进行支持才能安装）~<br>需要什么包装什么包，别想着一次性装完，不现实~<br>一般可根据自己需要用到的命令从手册中查到这个命令需要什么包<br><img src="/img/1_4.png" alt="手册内容"></p>
+<p>常规补包流程：</p>
+<blockquote>
+<p>make clean-all<br>make yes-xxx<br>make yes-xxx<br>…..<br>make  mpi</p>
+</blockquote>
+<p>最后更新下调用的lmp_mpi，不更新则永远调用的是以前的lmp_mpi</p>
+<blockquote>
+<p>sudo cp lmp_mpi /usr/local/bin (或者/usr/bin)</p>
+<h1 id="直接覆盖以前的旧版"><a href="#直接覆盖以前的旧版" class="headerlink" title="直接覆盖以前的旧版~"></a>直接覆盖以前的旧版~</h1><p>或者<br>sudo  cp lmp_mpi /usr/local/bin/lmp_mpi_new (或者/usr/bin/lmp_mpi_new)</p>
+<h1 id="即把新编译得到的lmp-mpi换个名字与之前的旧版共存，想调用哪个用哪个"><a href="#即把新编译得到的lmp-mpi换个名字与之前的旧版共存，想调用哪个用哪个" class="headerlink" title="即把新编译得到的lmp_mpi换个名字与之前的旧版共存，想调用哪个用哪个~"></a>即把新编译得到的lmp_mpi换个名字与之前的旧版共存，想调用哪个用哪个~</h1></blockquote>
+<p>二：离线服务器版（适合各大超算平台以及组内无网的服务器）<br>1.检查一下能否调用g++，gcc，gfortran等编译器<br>即输入（即检查是不是能随时随地调用g++，gcc，gfortran）：</p>
+<blockquote>
+<p>which  g++<br>which  gfortran<br>which  gcc</p>
+</blockquote>
+<p>看看有没有路径输出来（这些常见的编译器在各大超算平台都已装好，直接调用即可），没有的话，则询问服务器管理员，或者自行百度下载安装包后上传服务器后安装直到能随时调用~<br><img src="/img/1_5.png" alt="有路径输出则表示没问题"></p>
+<p>2.安装fftw3以及mpich3（mpich3的安装流程与介绍的fftw3一样）<br>注：此过程若是报错，95%都是因为gfortran这类的编译器没装好，或者不能直接调用~</p>
+<blockquote>
+<p>cd  fftw-3.3.8 #进入解压后的文件夹<br>./configure  —prefix=xxx/xxx/xxx </p>
+<h1 id="配置阶段，xxx-xxx-xxx为自定义的目录路径，选个空间够的位置就行"><a href="#配置阶段，xxx-xxx-xxx为自定义的目录路径，选个空间够的位置就行" class="headerlink" title="配置阶段，xxx/xxx/xxx为自定义的目录路径，选个空间够的位置就行"></a>配置阶段，xxx/xxx/xxx为自定义的目录路径，选个空间够的位置就行</h1><p>make (或者输入make -j 4)</p>
+<h1 id="编译阶段，单核就输入make就行，不过会有点慢，多核就输入make-j-n-n为核数-1"><a href="#编译阶段，单核就输入make就行，不过会有点慢，多核就输入make-j-n-n为核数-1" class="headerlink" title="编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)"></a>编译阶段，单核就输入make就行，不过会有点慢，多核就输入make -j n (n为核数)</h1><p>make install  #最后安装</p>
+</blockquote>
+<p>3.设置环境变量<br>注：此过程目的既是让mpirun以及fftw能随时被调用（即类似于win下安装软件时，最后一步一般会问你要不要在桌面创建快捷方式，创建了快捷方式，我们用软件就很方便，就不需要每次用的时候都要进入安装目录里面去找，直接在桌面点击即可~）</p>
+<blockquote>
+<p>vi ~/.bashrc </p>
+<h1 id="对fftw"><a href="#对fftw" class="headerlink" title="对fftw"></a>对fftw</h1><p>export     PATH=x/x/x/bin/:$PATH  </p>
+<h1 id="x-x-x为自定义的目录路径"><a href="#x-x-x为自定义的目录路径" class="headerlink" title="x/x/x为自定义的目录路径"></a>x/x/x为自定义的目录路径</h1><p>export     LD_LIBRARY_PATH=x/x/x/lib/:$LD_LIBRARY_PATH</p>
+<h1 id="对mpich（与fftw一样的设置）"><a href="#对mpich（与fftw一样的设置）" class="headerlink" title="对mpich（与fftw一样的设置）"></a>对mpich（与fftw一样的设置）</h1><p>export     PATH=x/x/x/bin/:$PATH<br>export     LD_LIBRARY_PATH=x/x/x/lib/:$LD_LIBRARY_PATH<br>写完之后保存退出（:wq）<br>source     ~/.bashrc#激活设定</p>
+</blockquote>
+<p>查一下是否设定成功</p>
+<blockquote>
+<p>which       mpirun<br>which       fftw-wisdom</p>
+</blockquote>
+<p>输入以上语句后看看有没有路径输出，有则成功，没有就重装或者检查环境变量的设置吧~<br><img src="/img/1_6.png" alt="有路径输出则表示没问题"></p>
+<p>4.安装LAMMPS<br>以3Mar20版为例，建议把LAMMPS，mpich，fftw等安装包放在同一目录下，方便管理</p>
+<blockquote>
+<p>tar -zxvf  lammps-stable.tar.gz   #解压文件<br>cd  lammps-3Mar20/src/     #进入解压后文件夹钟的src文件夹里面<br>make ps            </p>
+<h1 id="查看所支持的包，不出意外应该全是no-跟个人电脑版里的说明一样，需要什么包装什么包"><a href="#查看所支持的包，不出意外应该全是no-跟个人电脑版里的说明一样，需要什么包装什么包" class="headerlink" title="查看所支持的包，不出意外应该全是no,跟个人电脑版里的说明一样，需要什么包装什么包"></a>查看所支持的包，不出意外应该全是no,跟个人电脑版里的说明一样，需要什么包装什么包</h1><p>make yes-manybody      </p>
+<h1 id="正式编译前把所需要的包装上，例如这里安装manybody这个包-1"><a href="#正式编译前把所需要的包装上，例如这里安装manybody这个包-1" class="headerlink" title="正式编译前把所需要的包装上，例如这里安装manybody这个包"></a>正式编译前把所需要的包装上，例如这里安装manybody这个包</h1><p>make mpi        #最后正式安装</p>
+</blockquote>
+<p>安装结束后看看能不能在src文件夹里面找到lmp_mpi这个编译安装得到的LAMMPS可执行文件，能找到则安装成功，找不到则排除问题重新安装~</p>
+<p>最后设置下环境变量，让lmp_mpi可以随时被调用~</p>
+<blockquote>
+<p>vi ~/.bashrc<br>export     PATH=xxx/xxx/xxx/src:$PATH<br>source     ~/.basrc#激活设定</p>
+</blockquote>
+<p>最后输入</p>
+<blockquote>
+<p>which lmp_mpi</p>
+</blockquote>
+<p>看看能否出现类似路径，出现则设定成功~<br><img src="/img/1_7.png" alt="有路径输出则表示没问题"></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 weig16@whu.edu.cn </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 LAMMPS爱好者
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

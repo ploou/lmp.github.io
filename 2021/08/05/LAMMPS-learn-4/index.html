@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LAMMPS-learn-4 | LAMMPS爱好者</title>
+  <meta name="keywords" content=" LAMMPS ">
+  <meta name="description" content="LAMMPS-learn-4 | LAMMPS爱好者">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LAMMPS-learn-4">
+<meta property="og:url" content="https://ploou.github.io/2021/08/05/LAMMPS-learn-4/index.html">
+<meta property="og:site_name" content="LAMMPS爱好者">
+<meta property="og:description" content="LAMMPS logo 介绍前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个logo其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ploou.github.io/img/logo.gif">
+<meta property="article:published_time" content="2021-08-05T13:21:28.000Z">
+<meta property="article:modified_time" content="2021-08-14T02:53:14.846Z">
+<meta property="article:author" content="MD爱好者">
+<meta property="article:tag" content="LAMMPS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ploou.github.io/img/logo.gif">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>MD爱好者</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/ploou"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/ploou-33"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:weig16@whu.edu.cn"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=496719965&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(6)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS基础">
+                        
+                        LAMMPS基础
+                        <small>(5)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS经验谈">
+                        
+                        LAMMPS经验谈
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+        <a 
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="6">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://docs.lammps.org/Manual.html">LAMMPS官方手册</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>LAMMPS</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a id="top" class="全部文章 LAMMPS基础 "
+           href="/2021/07/31/Hello-LAMMPS/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="Hello, LAMMPS">Hello, LAMMPS</span>
+            <span class="post-date" title="2021-07-31 17:34:53">2021/07/31</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/05/LAMMPS-learn-4/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-4">LAMMPS-learn-4</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS经验谈 "
+           href="/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="重复文献需要注意的地方之力场参数的确定">重复文献需要注意的地方之力场参数的确定</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/02/LAMMPS-learn-3/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-3">LAMMPS-learn-3</span>
+            <span class="post-date" title="2021-08-02 09:13:55">2021/08/02</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-2/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-2">LAMMPS-learn-2</span>
+            <span class="post-date" title="2021-08-01 11:24:16">2021/08/01</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-1/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-1">LAMMPS-learn-1</span>
+            <span class="post-date" title="2021-08-01 09:54:39">2021/08/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-LAMMPS-learn-4" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">LAMMPS-learn-4</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="LAMMPS基础">LAMMPS基础</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color2">LAMMPS</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2021-08-14 10:53:14'>2021-08-05 21:21</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LAMMPS-logo-%E4%BB%8B%E7%BB%8D"><span class="toc-text">LAMMPS logo 介绍</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="LAMMPS-logo-介绍"><a href="#LAMMPS-logo-介绍" class="headerlink" title="LAMMPS logo 介绍"></a>LAMMPS logo 介绍</h1><p>前面介绍了下LAMMPS里内置的建模命令(region, create_atoms, lattice, create_box等等)，今天就介绍个相关的经典例子——LAMMPS经典logo的制作，不知道各位在看LAMMPS官网时有没有注意过这个logo（这个logo由一个个原子所组成）,这个<a target="_blank" rel="noopener" href="https://lammps.sandia.gov/inputs/in.logo.txt">logo</a>其实是由LAMMPS内置的命令建模所得到，并完成了一个简单的动态模拟，有兴趣的同学可以学习一下，顺便也可熟悉下我们之前提到的命令（主要是用到region命令）：</p>
+<pre><code># simulation of LAMMPS logo
+
+units        lj
+atom_style    atomic
+dimension    2
+
+# create 2d lattice, low density so diffuses
+
+lattice        sq2 0.5 origin 0.25 0.25 0.0
+region        box block 0 31 0 7 -0.5 0.5
+create_box    2 box
+create_atoms    1 box
+
+# LAMMPS letters via regions, convert to type 2 atoms
+
+region            L1 block 2 3 1 6 -0.5 0.5
+region            L2 block 2 5 1 2 -0.5 0.5
+region        L union 2 L1 L2
+
+region            A1 block 6 7 1 6 -0.5 0.5
+region            A2 block 8 9 1 6 -0.5 0.5
+region            A3 block 6 9 3 4 -0.5 0.5
+region            A4 block 6 9 5 6 -0.5 0.5
+region        A union 4 A1 A2 A3 A4
+
+region            1M1 block 10 11 1 6 -0.5 0.5
+region            1M2 block 14 15 1 6 -0.5 0.5
+region            1M3 block 10 15 5 6 -0.5 0.5
+region            1M4 block 12 13 3 6 -0.5 0.5
+region        1M union 4 1M1 1M2 1M3 1M4
+
+region            2M1 block 16 17 1 6 -0.5 0.5
+region            2M2 block 20 21 1 6 -0.5 0.5
+region            2M3 block 16 21 5 6 -0.5 0.5
+region            2M4 block 18 19 3 6 -0.5 0.5
+region        2M union 4 2M1 2M2 2M3 2M4
+
+region            P1 block 22 23 1 6 -0.5 0.5
+region            P2 block 24 25 3 6 -0.5 0.5
+region            P3 block 22 25 3 4 -0.5 0.5
+region            P4 block 22 25 5 6 -0.5 0.5
+region        P union 4 P1 P2 P3 P4
+
+region            S1 block 26 29 5 6 -0.5 0.5
+region            S2 block 26 27 3 6 -0.5 0.5
+region            S3 block 26 29 3 4 -0.5 0.5
+region            S4 block 28 29 1 4 -0.5 0.5
+region            S5 block 26 29 1 2 -0.5 0.5
+region        S union 5 S1 S2 S3 S4 S5
+
+region          LAMMPS union 6 L A 1M 2M P S
+set        region LAMMPS type 2
+
+# LJ and other system parameters
+
+mass        * 1.0
+pair_style    lj/cut 2.5
+pair_coeff    * * 1.0 1.0 2.5
+
+timestep        0.005
+neighbor    0.3 bin
+neigh_modify    delay 0 every 1 check yes
+
+velocity    all create 2.0 87287 loop geom
+
+thermo        100
+dump        1 all atom 20 tmp.dump
+
+# run without integrator to &quot;pause&quot; the visualization
+
+run        100
+
+# dissolve the lattice
+
+fix        1 all nve
+fix        2 all enforce2d
+run        1000
+
+# run without integrator to &quot;pause&quot; the visualization
+
+unfix        1
+unfix        2
+run        200
+
+# reverse the velocities and continue run
+# logo and lattice should reassemble within round-off errors
+
+variable        vxflip atom -vx
+variable        vyflip atom -vy
+velocity    all set v_vxflip v_vyflip NULL
+
+fix        1 all nve
+fix        2 all enforce2d
+run        1000
+
+# run without integrator to &quot;pause&quot; the visualization
+
+unfix        1
+unfix        2
+run        100
+</code></pre><p><strong>最后可以得到这个经典logo：</strong></p>
+<p><img src="/img/logo.gif" alt="logo"></p>
+<p>在LAMMPS官网界面鼠标放在这个logo上即可看到这个in文件内容所展示的动力学过程</p>
+<p>根据这个例子我们DIY了<strong><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/U2SMytw7kZXd5pQ-ili_KQ">用MDer的方式给党庆生</a>”</strong>的内容,有兴趣的同学可以去看看</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 weig16@whu.edu.cn </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 LAMMPS爱好者
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
