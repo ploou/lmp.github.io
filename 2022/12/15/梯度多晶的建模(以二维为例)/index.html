@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LAMMPS爱好者</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="LAMMPS爱好者">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:  ​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LAMMPS爱好者">
+<meta property="og:url" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/index.html">
+<meta property="og:site_name" content="LAMMPS爱好者">
+<meta property="og:description" content="梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:  ​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/img/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/gradient.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/gradient2.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/gradient3.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/period.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/gradient4.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/gradient5.png">
+<meta property="og:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/picture/test.png">
+<meta property="article:published_time" content="2022-12-15T11:28:15.844Z">
+<meta property="article:modified_time" content="2022-12-15T11:30:15.850Z">
+<meta property="article:author" content="MD爱好者">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/img/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>MD爱好者</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/ploou"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/ploou-33"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:weig16@whu.edu.cn"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=496719965&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(8)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS基础">
+                        
+                        LAMMPS基础
+                        <small>(5)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="LAMMPS经验谈">
+                        
+                        LAMMPS经验谈
+                        <small>(2)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+        <a 
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="8">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://docs.lammps.org/Manual.html">LAMMPS官方手册</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>LAMMPS</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a id="top" class="全部文章 LAMMPS基础 "
+           href="/2021/07/31/Hello-LAMMPS/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="Hello, LAMMPS">Hello, LAMMPS</span>
+            <span class="post-date" title="2021-07-31 17:34:53">2021/07/31</span>
+        </a>
+        
+        <a  class="全部文章 "
+           href="/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2022-12-15 19:28:15">2022/12/15</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/05/LAMMPS-learn-4/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-4">LAMMPS-learn-4</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS经验谈 "
+           href="/2021/08/05/%E9%87%8D%E5%A4%8D%E6%96%87%E7%8C%AE%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9%E4%B9%8B%E5%8A%9B%E5%9C%BA%E5%8F%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="重复文献需要注意的地方之力场参数的确定">重复文献需要注意的地方之力场参数的确定</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS经验谈 "
+           href="/2021/08/05/LAMMPS%E6%8A%A5%E9%94%99%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS报错的解决方案">LAMMPS报错的解决方案</span>
+            <span class="post-date" title="2021-08-05 21:21:28">2021/08/05</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/02/LAMMPS-learn-3/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-3">LAMMPS-learn-3</span>
+            <span class="post-date" title="2021-08-02 09:13:55">2021/08/02</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-2/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-2">LAMMPS-learn-2</span>
+            <span class="post-date" title="2021-08-01 11:24:16">2021/08/01</span>
+        </a>
+        
+        <a  class="全部文章 LAMMPS基础 "
+           href="/2021/08/01/LAMMPS-learn-1/"
+           data-tag="LAMMPS"
+           data-author="" >
+            <span class="post-title" title="LAMMPS-learn-1">LAMMPS-learn-1</span>
+            <span class="post-date" title="2021-08-01 09:54:39">2021/08/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-梯度多晶的建模(以二维为例)" class="article article-type-post" itemscope itemprop="blogPost">
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-12-15 19:30:15'>2022-12-15 19:28</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1-%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B"><span class="toc-text">梯度多晶的建模(以二维为例)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC%E5%92%8C%E7%BC%96%E7%A8%8B%E6%80%9D%E8%B7%AF"><span class="toc-text">数学推导和编程思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E6%80%9D%E8%B7%AF"><span class="toc-text">编程思路</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%93%E5%B1%95%E6%80%9D%E8%80%83"><span class="toc-text">拓展思考</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="梯度多晶的建模-以二维为例"><a href="#梯度多晶的建模-以二维为例" class="headerlink" title="梯度多晶的建模(以二维为例)"></a>梯度多晶的建模(以二维为例)</h1><p>​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:</p>
+<p><img src="./img/梯度多晶.png" alt=""></p>
+<h2 id="数学推导和编程思路"><a href="#数学推导和编程思路" class="headerlink" title="数学推导和编程思路"></a>数学推导和编程思路</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:</p>
+<p><img src=".\picture\示意图.png" alt=""></p>
+<p>​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以不看, 现在我们来看a图, 我们假设已经知道了整个模型在横向的尺寸为L, 我们再做一个假设, 在a图中, 每个晶粒均为正方形, 那么如何实现梯度分布呢? 从a图中, 最直观的想法就是, 如果我第一层晶粒为8个, 第二层晶粒为6个, 第三层为4个, 以此类推, 构成一个等差数组, 而考虑到整个模型的横向尺寸L是一个已知的定值, 那么第一层晶粒的尺寸d1 = L/8, d2 = L/6, d3 = L/4…… </p>
+<p>​        那么我们会惊喜的发现, 每一层晶粒的尺寸在随着纵向坐标的增加而减少, 也就是实现了梯度的晶粒分布, 同时, 如果第一层到第二层的晶粒不是减少而是增加呢?那也是一样的算法, 也可以实现逆梯度分布.而这也是我今天想要讲述的最基础的梯度分布.</p>
+<p>​        当然还没完, 之后我们还需要给每个晶粒的控制点加入一个扰动, 这个扰动的大小应该在(-0.5, 0.5) * dk之间, dk是第k层晶粒的尺寸. 加入之后的效果如图b所示, 这样, 我们才能生成一个比较好的随机梯度分布的多晶模型, 多晶模型如图c所示. 当然, 在分子动力学中, 我建议最好保持图c中surface和core的周期性边界条件, 因为如果像图c的种子去生成多晶, 那么模型就会非常难看. 好的, 那么基本的建模思路接受了, 接下来就是编程的环节了.</p>
+<h3 id="编程思路"><a href="#编程思路" class="headerlink" title="编程思路"></a>编程思路</h3><p>​        事先声明, 本教程不针对0编程基础和零Fortran基础人员, 如果没有相关基础, 建议谨慎观看, 当然实际上下面的内容不会很难, 普通的使用Fortran的写法, 和MATLAB不会差太多, 除了没有MATLAB众多的内置函数以外.</p>
+<p>​        这里对我的程序做一些简单的说明, 一些没有讲到的细节, 可以发邮件询问我, 当然我个人的建议是百度, 通常2分钟可以解决你的大多数问题. 首先让我们看看, 对于计算各个控制节点的位置, 需要哪些参数? 首先应该由用户设置模型的横向尺寸L, 接着, 第一层的晶粒数first也应该给出, 同时每一层应该增加或者减少的晶粒数delta也应该给出, 且delta&gt;0代表每一层的晶粒增加, delta&lt;0代表每一层的晶粒减少.同时我们将使用2个数组, 一个用来存储每一层晶粒的尺寸, 一个用来存储所有晶粒的坐标和对应层数. 同时, 在给每个晶粒施加扰动的时候, 我们想控制扰动的程度, 可以使用一个在(0, 1)的实数chaosFactor进行控制. 还有一些其他的参数, 这里我们列举出来:</p>
+<pre><code class="lang-fortran">  use iso_fortran_env, only: stdout =&gt; output_unit, wp =&gt; real64
+  implicit none
+  real(wp), allocatable :: dK(:)             !&lt; 某一层晶粒的尺寸
+  real(wp), allocatable :: coordinate(:, :)  !&lt; 含有所有控制点坐标的数组
+  real(wp) :: L        !&lt; 二维模型的宽度
+  real(wp) :: xlim, ylim   !&lt; 两个方向上的的坐标极限
+  real(wp) :: chaosFactor  !&lt; 一个在(0, 1)之间的实数, 决定了控制点偏离平衡位置的程度
+  integer :: index = 1 !&lt; 指向某一个晶粒的坐标
+  integer :: K        !&lt; 梯度晶粒的层数
+  integer :: first    !&lt; 第一层晶粒数
+  integer :: delta    !&lt; 每一层减少的晶粒数
+  integer :: gNum     !&lt; 每一层的晶粒数
+  integer :: layers   !&lt; 一共多少个晶粒
+  integer :: i, j     !&lt; 循环变量
+  logical :: isAtomsk !&lt; 判断是否写出atomsk的文件
+  logical :: isPeriod !&lt; 是否考虑让晶粒对称周期性分布
+</code></pre>
+<p>​        首先我们考虑如何从用户手中读取到想要的参数, 这里我采用的Fortran中的namelist读取方法, 因为这种方法简单易行, 而且对于使用者也比较友好:</p>
+<pre><code class="lang-fortran">subroutine ReadParameter(nmlName, length, gNumber, del, layer, isAtom, period, cFactor)
+    character(len=*), intent(in) :: nmlName    !&lt; 含有nml格式的文件的名称
+    real(wp), intent(out) :: length            !&lt; 多晶模型中的长度
+    real(wp), intent(out) :: cFactor           !&lt; 一个在(0, 1)之间的实数, 决定了控制点偏离平衡位置的程度
+    integer, intent(out) :: gNumber            !&lt; 第一层晶粒的数量
+    integer, intent(out) :: del                !&lt; 每一层减少的晶粒数量
+    integer, intent(out) :: layer              !&lt; 一共有多少层
+    logical, intent(out) :: isAtom             !&lt; 是否写出atomsk格式的控制节点文件
+    logical, intent(out) :: period             !&lt; 是否考虑让晶粒对称周期性分布
+    integer :: nmlID                           !&lt; 文件ID通道
+    integer :: ioflag                          !&lt; 看看文件读取是否成功
+    namelist/myList/ length, gNumber, del, layer, isAtom, period, cFactor
+
+    open(newunit=nmlID, file=nmlName, action=&#39;read&#39;)    !! 打开文件
+    read(unit=nmlID, nml=myList, iostat=ioflag)         !! 按namelist方式读取
+    close(nmlID)                                        !! 关闭文件
+    !! 读取之后应该对参数进行一些基本的判断
+    if (del == 0 ) then
+      write(stdout , &#39;(A)&#39;) &#39;You must make variable del not equal to zero.&#39;
+      stop
+    else if (del &lt; 0 ) then
+      if ((gNumber + (layer - 1) * del) &lt; 0) then
+        write(stdout , &#39;(A)&#39;) &#39;Negative number of grain, please check your parameter.&#39;
+        stop
+      end if
+    end if
+    if (gNumber &lt; 0.d0) stop &#39;Please give parameter gNumer a positive number.&#39;
+    if (length &lt; 0.0d0) stop &#39;Please give parameter length a positive number.&#39;
+    if (cFactor &lt; 0.d0 .or. cFactor &gt; 1.d0) stop &#39;chaosFactor must between 0 and 1, please check your input.&#39;
+
+  end subroutine ReadParameter
+</code></pre>
+<p>​        在Fortran中, 我们只需要把想要读取到的变量用namelist进行定义, 然后在打开了文件之后, 使用read()函数, 指明nml关键字的取值进行读取即可, 这是它的输入文件的样子, 输入文件中的变量名称和namelist名称必须和程序中的一一对应, 必须严格按照下图中的格式编写:</p>
+<pre><code>&amp;myList
+length = 600.d0   !&lt; 多晶模型中的长度
+gNumber = 5       !&lt; 第一层晶粒的数量
+del = 1
+layer = 15
+isAtom = .true.
+Period = .true.
+cFactor = 0.9d0
+/
+</code></pre><p>​        读取到了参数之后, 开始做一些前期的准备工作:</p>
+<pre><code class="lang-fortran">  layers = K * first + (K * (K - 1)) / 2 * delta !! 利用等差数列计算需要分配多少内存
+  !! layers代表本次需要计算多少个晶粒的位置
+  !! 分配内存
+  allocate(dk(K))                                
+  allocate(coordinate(layers, 3))   !! 有3列数据, 分别是控制节点的xy坐标, 和属于第几层的晶粒
+
+  !! 初始化所有晶粒尺寸为0
+  dk = 0.d0   
+  call random_seed  !! 初始化随机数种子
+</code></pre>
+<p>​        计算完了基本参数之后, 我们回过头来看看图a, 为了方便起见, 我们从底下往上面, 逐层生成晶粒的xy坐标, 这一过程将由一个双层循环完成, 第一层循环是循环第i层, 第二层循环是计算第i层的第j个晶粒:</p>
+<pre><code class="lang-fortran">  do i = 1, K
+    gNum = first + (i - 1 ) * delta         !! 第 i 层的晶粒个数
+    do j = 1, gNum      
+      dK(i) = L / (gNum)                    !! 计算第 i 层晶粒的尺寸
+      if ( i == 1) then
+        coordinate(index, 1) = (0.5 * dK(i)) + (j - 1) * dK(i)  !! 计算晶粒节点的x坐标
+        coordinate(index, 2) = dK(i) * 0.5d0                    !! 计算晶粒节点的y坐标
+        coordinate(index, 3) = real(i, kind=wp)                 !! 声明是第几层的晶粒, 方便后续调用
+        index = index + 1
+      else
+        coordinate(index, 1) = (0.5 * dK(i)) + (j - 1) * dK(i) 
+        coordinate(index, 2) = (sum(dK(1 : i - 1)) + dk(i) * 0.5d0)  
+        coordinate(index, 3) = real(i, kind=wp)
+        index = index + 1
+      end if
+    end do
+  end do
+  !! 循环结束, 此时的index - 1 也正好等于晶粒个数
+</code></pre>
+<p>​        上述的代码我个人认为逻辑已经非常清晰了, 同学们可以试着根据图a和上述代码推演一下循环的思路过程, 这里为了不让同学们再耗费时间往上翻, 这里重新声明一下上图双重循环代码中几个变量的含义:</p>
+<p>​        i, j: 循环变量        </p>
+<p>​        gNum: 第i层晶粒的晶粒尺寸        </p>
+<p>​        coordinate(:, :): 一个二维数组, 行数等于晶粒数, 有3列, 前2列分别对应晶粒的xy坐标, 而第三列对应晶粒属于哪一层            </p>
+<p>​        dk(:): 一个一维数组, 记录了每一层晶粒的尺寸, 如dk(2)就是第二层晶粒的尺寸</p>
+<p>​        循环结束之后, 计算模型的相关信息:</p>
+<pre><code class="lang-fortran">  xlim = L
+  if (isPeriod) then  !! 计算x和y区域的上下限
+    ylim = 2.d0 * sum(dK) - dk(1)
+  else
+    ylim = sum(dK)      
+  end if
+</code></pre>
+<p>​        并将相关信息输出到屏幕上面:</p>
+<pre><code class="lang-fortran">  !! 生成完之后将相关信息输出到屏幕上面
+  if (isPeriod) then
+    write(stdout, &#39;(A,I0,A)&#39;) &#39;控制点生成结束, 一共生成了&#39;, 2*(index - 1)-first,&#39;个控制节点.&#39;
+  else
+    write(stdout, &#39;(A,I0,A)&#39;) &#39;控制点生成结束, 一共生成了&#39;, index - 1,&#39;个控制节点.&#39;
+  end if
+
+  write(stdout, &#39;(A,I0,A)&#39;) &#39;其中第一层的控制节点个数为: &#39;, first, &#39;个.&#39;
+  write(stdout, &#39;(A,I0,A)&#39;) &#39;每层变化的控制节点个数为: &#39;, delta, &#39;个.&#39;
+
+  if (isPeriod) then
+    write(stdout, &#39;(A,I0,A)&#39;) &#39;总计生成&#39;, 2*K-1, &#39;层梯度层.&#39;
+  else
+    write(stdout, &#39;(A,I0,A)&#39;) &#39;总计生成&#39;, K, &#39;层梯度层.&#39;
+  end if
+  write(stdout, &#39;(A, G0, A, G0)&#39;) &#39;x方向上长度: &#39;, xlim, &#39;, y方向上长度: &#39;, ylim
+</code></pre>
+<p>​        isPeriod是一个逻辑变量, 取决于用户的输入, 可以决定是否生成周期性的梯度晶粒分布, 这里我们暂且按下不表, 来测试一下相关代码的结果, MATLAB中提供了一个voronoi函数, 可以根据控制节点直接绘制taylor多边形. 首先测试输入如下:</p>
+<pre><code>&amp;myList
+length = 500.d0
+gNumber = 5
+del = 3
+layer = 10
+isAtom = .false.
+Period = .false.
+cFactor = 0.9d0
+/
+</code></pre><p>​        屏幕上面的输出结果是:</p>
+<pre><code>控制点生成结束, 一共生成了290个控制节点.
+其中第一层的控制节点个数为: 5个.
+每层变化的控制节点个数为: 1个.
+总计生成20层梯度层.
+x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
+</code></pre><p>​        使用gnuplot绘图结果:</p>
+<p><img src="./picture/gradient.png" alt=""></p>
+<p>​        看起来还不错, 但是有同学可能就发现了, 为什么分布的这么均匀? 没有随机性呀? 是的, 因为我们的代码还没有把随机数相关的内容写进去, 这里是展示一下中间结果, 接下来我们将引入扰动值, 以便于生成梯度多晶, 通过子程序WriteData实现:</p>
+<pre><code class="lang-fortran">  subroutine WriteData(array, dataname)
+    !! 将计算出来的结果写入文件中方便MATLAB用来绘图
+    real(wp), intent(in) :: array(:, :)      !&lt; 包含所有控制节点坐标的数组
+    character(len=*), intent(in) :: dataname !&lt; 写出去的数据文件的名称
+    real(wp) :: chaosx   !&lt; 晶粒的扰动, 在x方向上
+    real(wp) :: chaosy   !&lt; 晶粒的扰动, 在y方向上
+    integer :: dataID !&lt; data文件的通道ID         
+    integer :: x, y   !&lt; 循环变量
+    integer :: ndim   !&lt; 晶粒的个数
+    integer :: grainNum   !&lt; 每一层的晶粒个数
+    integer :: floor  !&lt; 第几层
+
+    ndim = size(array, dim=1)   !! 获取第一个维度的尺寸
+    open(newunit=dataID, file=dataname, action=&#39;write&#39;)
+    if (isPeriod) then  !! 如果要求周期性的晶粒分布
+      do x = 1, ndim
+        floor = nint(coordinate(x, 3))        !! 查询第x个晶粒是第几层
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! chaosFactor是扰动因子, 越小说明晶粒扰动越小
+        write(dataID, *) array(x, 1) + chaosx, array(x, 2) + chaosy + sum(dK(2:K))
+      end do
+      do x = first + 1, index - 1      !! 将相关的晶粒输出一遍
+        floor = nint(coordinate(x, 3))
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! chaosFactor是扰动因子, 越小说明晶粒扰动越小
+        write(dataID, *) coordinate(x, 1) + chaosx, 2.d0 * coordinate(1, 2) - coordinate(x, 2) + chaosy + sum(dK(2:K))
+      end do
+    else
+      do x = 1, ndim
+        floor = nint(coordinate(x, 3))        !! 查询第x个晶粒是第几层
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     
+        write(dataID, *) array(x, 1) + chaosx, array(x, 2) + chaosy
+      end do
+    end if
+    close(dataID)
+
+  end subroutine WriteData
+</code></pre>
+<p>​        上述代码有些冗长, 我们先来看看随机扰动部分, 首先来看到else里面的do循环, 这个循环中, ndim为晶粒的数量, random_numer为Fortran的内置一个伪随机数生成器, 可以生成一个(0, 1)之间的均匀分布的随机数, 这里我们在生成完之后马上减去0.5, 以使得其范围落在(-0.5, 0.5)之间, 同时再乘以对应层数的晶粒尺寸, 再乘以一个扰动系数chaosFactor, 这样我们就可以控制晶粒节点的扰动不会超过晶粒尺寸的正负一半. 加上了随机扰动之后, 我们来看看控制节点的分布:</p>
+<p><img src="./picture/gradient2.png" alt=""></p>
+<p>​        目前似乎看不出什么, 别着急, 这里我们把节点坐标的文件导入MATLAB, 使用voronoi函数进行调用, 假设含有控制节点位置的文件名为seed.txt, 首先使用seeds = importdata(‘seed.txt’)进行导入, 接着使用voronoi(seeds(:,1),seeds(:,2))进行绘图, 绘图结果如下:</p>
+<p><img src="./picture/gradient3.png" alt=""></p>
+<p>​        可以看到, 还算是勉强取得了令人满意的效果. 但是不要忘记了, 我们最终是要生成控制节点坐标, 输入到atomsk里面, 生成二维的梯度多晶的模型, 而atomsk在生成梯度多晶的时候有一个问题, 默认xyz方向都是周期性边界条件, 如果采用上图的种子文件去生成多晶模型, 那么底部的大晶粒和顶部的小晶粒的连接部分就会非常尖锐, 甚至生成失败. 所以为了生成可用的多晶种子文件, 我们还需要进行一次修改.如下是我们的修改思路:</p>
+<p><img src="./picture/period.png" alt=""></p>
+<p>​        首先, 我们假设第一层晶粒的y坐标为y1, 而第k层的晶粒y坐标为yk, 现在, 我们为了保证周期性, 我们需要把所有在y = y1以上的晶粒沿着y = y1这个对称轴对称过去, 根据简单的几何学知识, 假设yk对称过去的坐标是yk1, 而yk1 = 2 * y1 - yk. 而x坐标呢? x坐标是不变的, 那么只需要一个小小的循环, 我们就可以轻松的把对称的晶粒坐标求出并写入到文件中:</p>
+<pre><code class="lang-fortran">      do x = first + 1, index - 1      !! 将相关的晶粒输出一遍
+        floor = nint(coordinate(x, 3))
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! chaosFactor是扰动因子, 越小说明晶粒扰动越小
+        write(dataID, *) coordinate(x, 1) + chaosx, 2.d0 * coordinate(1, 2) - coordinate(x, 2) + chaosy + sum(dK(2:K))
+      end do
+</code></pre>
+<p>​        上述代码在WriteData这个子程序中出现过一次, 而再次出现在这里, 想必同学们更能理解其含义了, 第一层共有first个晶粒, 而第一层的晶粒无需对称过去, 所以从第first + 1 个晶粒开始循环, 而index - 1则是总晶粒数. 之后便是常规的添加扰动, 写入文件了. 现在我们把上面用的的含有输入参数的文件中的period改为true之后, 来看看修改之后的结果:</p>
+<p><img src="./picture/gradient4.png" alt=""></p>
+<p>​        好, 看起来非常不错了, 现在我们把它导入到atomsk里面生成多晶模型, 这个时候你发现不对劲了, atomsk需要提前定义盒子的xyz的长度, 且默认xyz均大于0, 但是现在我们的多晶模型居然有相当一部分的晶粒控制节点的y坐标是小于0的. 那么怎么办呢? 通过仔细观察上图和上上图, 我们发现, 比起单向梯度多晶模型, 周期性梯度多晶模型中多了layer - 1层的晶粒, 其中layer为单向梯度多晶模型的层数, 而这对称过去的layer - 1层的晶粒, 会导致整个模型的长度比起单向梯度多晶模型多了sum(dk(2 : layer - 1))的长度, 那么, 我们是不是只需要把模型向上平移这么多长度? 即每个晶粒的y坐标都加上这么个东西, 问题是不是就解决了呢? 我们来尝试一下:</p>
+<pre><code class="lang-fortran">  xlim = L
+  if (isPeriod) then  !! 计算x和y区域的上下限
+    ylim = 2.d0 * sum(dK) - dk(1)
+  else
+    ylim = sum(dK)      
+  end if
+</code></pre>
+<p>​        加入上述语句之后, 重新生成模型</p>
+<p><img src="./picture/gradient5.png" alt=""></p>
+<p>​        好, 非常完美, 那么现在这个东西, 是不是就可以用于生成atomsk的晶粒种子文件了? 答案是还差一点点, 因为atomsk的种子文件和我们现在导出的文本文件还是差了一些格式, 现在我们重新编写一个用于导出atomsk可以识别的种子文件的子程序:</p>
+<pre><code class="lang-fortran">  subroutine WriteAtomsk(array, modelname, xdim, ydim)
+    !! 以atomsk可以读取的格式写入文本文件之中
+    real(wp), intent(in) :: array(:, :)       !&lt; 包含所有控制节点坐标的数组
+    real(wp), intent(in) :: xdim, ydim        !&lt; 仿真盒子在xy方向上的长度
+    character(len=*), intent(in) :: modelname !&lt; 写出去的数据文件的名称
+    real(wp) :: chaosx   !&lt; 晶粒的扰动, 在x方向上
+    real(wp) :: chaosy   !&lt; 晶粒的扰动, 在y方向上
+    integer :: modelID                     
+    integer :: x
+    integer :: ndim 
+    integer :: floor  !&lt; 第几层
+
+    ndim = size(array, dim=1)   !! 获取第一个维度的尺寸
+    open(newunit=modelID, file=modelname, action=&#39;write&#39;)
+    write(modelID, *) &#39;box&#39;, xdim, ydim, 0.d0
+    if (isPeriod) then  !! 如果要求周期性的晶粒分布
+      do x = 1, ndim
+        floor = nint(coordinate(x, 3))        !! 查询第x个晶粒是第几层
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! 0.95是扰动因子, 越小说明晶粒扰动越小
+        write(modelID, *) &#39;node&#39;, array(x, 1) + chaosx, array(x, 2) + chaosy + sum(dK(2:K)), 0.d0, &#39;random&#39;
+      end do
+      do x = first + 1, index - 1      !! 将相关的晶粒输出一遍
+        floor = nint(coordinate(x, 3))        !! 查询第x个晶粒是第几层
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! 0.95是扰动因子, 越小说明晶粒扰动越小
+        write(modelID, *) &#39;node&#39;, coordinate(x, 1) + chaosx, 2.d0 * coordinate(1, 2) - coordinate(x, 2) &amp;
+         + chaosy + sum(dK(2:K)), 0.d0, &#39;random&#39;
+      end do
+    else 
+      do x = 1, ndim
+        floor = nint(coordinate(x, 3))        !! 查询第x个晶粒是第几层
+        call random_number(chaosx)            !! 生成一个(0, 1)之间的随机数
+        call random_number(chaosy)
+        chaosx = (chaosx - 0.5d0) * dK(floor) * chaosFactor     !! 保证扰动在正负的晶粒尺寸一半以内
+        chaosy = (chaosy - 0.5d0) * dK(floor) * chaosFactor     !! 0.95是扰动因子, 越小说明晶粒扰动越小
+        write(modelID, *) &#39;node&#39;, array(x, 1) + chaosx, array(x, 2) + chaosy, 0.d0, &#39;random&#39;
+      end do
+    end if
+    close(modelID)
+  end subroutine WriteAtomsk
+</code></pre>
+<p>​        现在我们假设晶粒文件名字叫做gradient.txt, 而我们将使用Al原子来建立二维多晶模型.模型文件名称为al.lmp, 在安装了ATOMSK的电脑上面输入:</p>
+<pre><code class="lang-shell">atomsk --polycrystal al.lmp gradient.txt final.cfg
+</code></pre>
+<pre><code>     在ovito中查看我们生成的多晶, 这里我们把晶界原子变成蓝色, 这样看起来更明显一些:
+</code></pre><p><img src="./picture/test.png" alt=""></p>
+<p>​        好的, 非常完美, 现在你已经拥有了一个可以用于生成二维梯度多晶的程序并且已经完全理解且运作的过程了! 完整的源代码和可以在Windows上运行的exe程序:</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1WfS_JH3nTX9JoTs0NG9wYQ">https://pan.baidu.com/s/1WfS_JH3nTX9JoTs0NG9wYQ</a><br>提取码：fsyk<br>—来自百度网盘超级会员V6的分享</p>
+<h1 id="拓展思考"><a href="#拓展思考" class="headerlink" title="拓展思考"></a>拓展思考</h1><p>​        当然, 这个小程序还存在很多的不足, 还有很多可以拓展的空间, 这个程序是我匆忙之间写的, 还可以有很多的优化空间让程序速度更快和更优雅, 此外, 还有很多方向可以进行提高和改善, 比如:</p>
+<ol>
+<li><p>此程序需要用户输入模型的横向长度L, 第一层晶粒数, 每一层变化晶粒数, 我们会发现另一个方向的长度是用户无法定义的, 这个对于一些用户来说, 可能是比较棘手和麻烦的一件事情. 我们可以这样改善:</p>
+<p>我们不再假设初始散点的时候每个晶粒都是正方形, 而是长方形, 长度和宽度独立, 宽度可以依然按照上述方法进行计算, 而长度需要用户给出计算方法, 比如等比数列, 比如我想要一个800 x 600的梯度多晶模型, 600为宽度, 按照上述方法计算, 800为长度, 假设有4层梯度, 每层的长度是下一层长度的1.2倍, 那么根据等比数列求和公式, 可以很轻易的求出每一层晶粒的长度, 这样, 我们便可以按照套路计算出所有晶粒的xy坐标.</p>
+</li>
+<li><p>二维多晶模型的应用范围有限, 如果把上述算法思想推广到三维, 那么可以极大的提升其应用价值, 这里我先抛砖引玉, 说一下我的一个想法:</p>
+<p>首先用户需要制定xy方向的晶粒个数, 以及梯度层数, 以及xy方向的晶粒变化数, 以及xy方向2个方向上的尺度, 假设初始散点时, 晶粒为长方体.  比如我们定义第一层xy均为2个晶粒, 每一层的xy晶粒数加一, xy长度为200 x 200, 那么第一层的晶粒就是2 x 2 = 4晶粒, 晶粒在xy方向上的尺寸为200/2 = 100, z尺寸假设等于x, 第二层的晶粒就是3 x 3 = 9晶粒, 晶粒在xy方向上的尺寸为200/2 = 66.6667, z坐标同理, 以此类推, 实现三维的梯度晶粒分布, 至于给xyz加一个随机扰动, 这个是小问题, 就交给读者们自行思考了.</p>
+</li>
+</ol>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 weig16@whu.edu.cn </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 LAMMPS爱好者
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
