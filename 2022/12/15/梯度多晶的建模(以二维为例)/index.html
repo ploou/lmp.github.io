@@ -13,20 +13,20 @@
 <meta property="og:site_name" content="LAMMPS爱好者">
 <meta property="og:description" content="梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:  ​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ploou.github.io/img/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
-<meta property="og:image" content="https://ploou.github.io/img/%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
-<meta property="og:image" content="https://ploou.github.io/img/gradient.png">
-<meta property="og:image" content="https://ploou.github.io/img/gradient2.png">
-<meta property="og:image" content="https://ploou.github.io/img/gradient3.png">
-<meta property="og:image" content="https://ploou.github.io/img/period.png">
-<meta property="og:image" content="https://ploou.github.io/img/gradient4.png">
-<meta property="og:image" content="https://ploou.github.io/img/gradient5.png">
-<meta property="og:image" content="https://ploou.github.io/img/test.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\gradient.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\gradient2.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\gradient3.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\period.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\gradient4.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\gradient5.png">
+<meta property="og:image" content="d:\blog\betblog\source\img\test.png">
 <meta property="article:published_time" content="2022-12-15T11:28:15.844Z">
-<meta property="article:modified_time" content="2022-12-15T11:37:20.750Z">
+<meta property="article:modified_time" content="2022-12-15T11:43:48.715Z">
 <meta property="article:author" content="MD爱好者">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ploou.github.io/img/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
+<meta name="twitter:image" content="d:\blog\betblog\source\img\%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
 
 
 <link rel="icon" href="/img/avatar.jpg">
@@ -333,7 +333,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2022-12-15 19:37:20'>2022-12-15 19:28</time>
+            发布时间 : <time class="date" title='最后更新: 2022-12-15 19:43:48'>2022-12-15 19:28</time>
         
     </div>
     <div class="article-meta">
@@ -372,9 +372,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="梯度多晶的建模-以二维为例"><a href="#梯度多晶的建模-以二维为例" class="headerlink" title="梯度多晶的建模(以二维为例)"></a>梯度多晶的建模(以二维为例)</h1><p>​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:</p>
-<p><img src="/img/梯度多晶.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\梯度多晶.png" alt="梯度多晶"></p>
 <h2 id="数学推导和编程思路"><a href="#数学推导和编程思路" class="headerlink" title="数学推导和编程思路"></a>数学推导和编程思路</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:</p>
-<p><img src="/img/示意图.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\示意图.png" alt=""></p>
 <p>​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以不看, 现在我们来看a图, 我们假设已经知道了整个模型在横向的尺寸为L, 我们再做一个假设, 在a图中, 每个晶粒均为正方形, 那么如何实现梯度分布呢? 从a图中, 最直观的想法就是, 如果我第一层晶粒为8个, 第二层晶粒为6个, 第三层为4个, 以此类推, 构成一个等差数组, 而考虑到整个模型的横向尺寸L是一个已知的定值, 那么第一层晶粒的尺寸d1 = L/8, d2 = L/6, d3 = L/4…… </p>
 <p>​        那么我们会惊喜的发现, 每一层晶粒的尺寸在随着纵向坐标的增加而减少, 也就是实现了梯度的晶粒分布, 同时, 如果第一层到第二层的晶粒不是减少而是增加呢?那也是一样的算法, 也可以实现逆梯度分布.而这也是我今天想要讲述的最基础的梯度分布.</p>
 <p>​        当然还没完, 之后我们还需要给每个晶粒的控制点加入一个扰动, 这个扰动的大小应该在(-0.5, 0.5) * dk之间, dk是第k层晶粒的尺寸. 加入之后的效果如图b所示, 这样, 我们才能生成一个比较好的随机梯度分布的多晶模型, 多晶模型如图c所示. 当然, 在分子动力学中, 我建议最好保持图c中surface和core的周期性边界条件, 因为如果像图c的种子去生成多晶, 那么模型就会非常难看. 好的, 那么基本的建模思路接受了, 接下来就是编程的环节了.</p>
@@ -519,7 +519,7 @@ cFactor = 0.9d0
 总计生成20层梯度层.
 x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
 </code></pre><p>​        使用gnuplot绘图结果:</p>
-<p><img src="/img/gradient.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\gradient.png" alt=""></p>
 <p>​        看起来还不错, 但是有同学可能就发现了, 为什么分布的这么均匀? 没有随机性呀? 是的, 因为我们的代码还没有把随机数相关的内容写进去, 这里是展示一下中间结果, 接下来我们将引入扰动值, 以便于生成梯度多晶, 通过子程序WriteData实现:</p>
 <pre><code class="lang-fortran">  subroutine WriteData(array, dataname)
     !! 将计算出来的结果写入文件中方便MATLAB用来绘图
@@ -567,11 +567,11 @@ x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
   end subroutine WriteData
 </code></pre>
 <p>​        上述代码有些冗长, 我们先来看看随机扰动部分, 首先来看到else里面的do循环, 这个循环中, ndim为晶粒的数量, random_numer为Fortran的内置一个伪随机数生成器, 可以生成一个(0, 1)之间的均匀分布的随机数, 这里我们在生成完之后马上减去0.5, 以使得其范围落在(-0.5, 0.5)之间, 同时再乘以对应层数的晶粒尺寸, 再乘以一个扰动系数chaosFactor, 这样我们就可以控制晶粒节点的扰动不会超过晶粒尺寸的正负一半. 加上了随机扰动之后, 我们来看看控制节点的分布:</p>
-<p><img src="/img/gradient2.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\gradient2.png" alt=""></p>
 <p>​        目前似乎看不出什么, 别着急, 这里我们把节点坐标的文件导入MATLAB, 使用voronoi函数进行调用, 假设含有控制节点位置的文件名为seed.txt, 首先使用seeds = importdata(‘seed.txt’)进行导入, 接着使用voronoi(seeds(:,1),seeds(:,2))进行绘图, 绘图结果如下:</p>
-<p><img src="/img/gradient3.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\gradient3.png" alt=""></p>
 <p>​        可以看到, 还算是勉强取得了令人满意的效果. 但是不要忘记了, 我们最终是要生成控制节点坐标, 输入到atomsk里面, 生成二维的梯度多晶的模型, 而atomsk在生成梯度多晶的时候有一个问题, 默认xyz方向都是周期性边界条件, 如果采用上图的种子文件去生成多晶模型, 那么底部的大晶粒和顶部的小晶粒的连接部分就会非常尖锐, 甚至生成失败. 所以为了生成可用的多晶种子文件, 我们还需要进行一次修改.如下是我们的修改思路:</p>
-<p><img src="/img/period.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\period.png" alt=""></p>
 <p>​        首先, 我们假设第一层晶粒的y坐标为y1, 而第k层的晶粒y坐标为yk, 现在, 我们为了保证周期性, 我们需要把所有在y = y1以上的晶粒沿着y = y1这个对称轴对称过去, 根据简单的几何学知识, 假设yk对称过去的坐标是yk1, 而yk1 = 2 * y1 - yk. 而x坐标呢? x坐标是不变的, 那么只需要一个小小的循环, 我们就可以轻松的把对称的晶粒坐标求出并写入到文件中:</p>
 <pre><code class="lang-fortran">      do x = first + 1, index - 1      !! 将相关的晶粒输出一遍
         floor = nint(coordinate(x, 3))
@@ -583,7 +583,7 @@ x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
       end do
 </code></pre>
 <p>​        上述代码在WriteData这个子程序中出现过一次, 而再次出现在这里, 想必同学们更能理解其含义了, 第一层共有first个晶粒, 而第一层的晶粒无需对称过去, 所以从第first + 1 个晶粒开始循环, 而index - 1则是总晶粒数. 之后便是常规的添加扰动, 写入文件了. 现在我们把上面用的的含有输入参数的文件中的period改为true之后, 来看看修改之后的结果:</p>
-<p><img src="/img/gradient4.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\gradient4.png" alt=""></p>
 <p>​        好, 看起来非常不错了, 现在我们把它导入到atomsk里面生成多晶模型, 这个时候你发现不对劲了, atomsk需要提前定义盒子的xyz的长度, 且默认xyz均大于0, 但是现在我们的多晶模型居然有相当一部分的晶粒控制节点的y坐标是小于0的. 那么怎么办呢? 通过仔细观察上图和上上图, 我们发现, 比起单向梯度多晶模型, 周期性梯度多晶模型中多了layer - 1层的晶粒, 其中layer为单向梯度多晶模型的层数, 而这对称过去的layer - 1层的晶粒, 会导致整个模型的长度比起单向梯度多晶模型多了sum(dk(2 : layer - 1))的长度, 那么, 我们是不是只需要把模型向上平移这么多长度? 即每个晶粒的y坐标都加上这么个东西, 问题是不是就解决了呢? 我们来尝试一下:</p>
 <pre><code class="lang-fortran">  xlim = L
   if (isPeriod) then  !! 计算x和y区域的上下限
@@ -593,7 +593,7 @@ x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
   end if
 </code></pre>
 <p>​        加入上述语句之后, 重新生成模型</p>
-<p><img src="/img/gradient5.png" alt=""></p>
+<p><img src="D:\blog\betblog\source\img\gradient5.png" alt=""></p>
 <p>​        好, 非常完美, 那么现在这个东西, 是不是就可以用于生成atomsk的晶粒种子文件了? 答案是还差一点点, 因为atomsk的种子文件和我们现在导出的文本文件还是差了一些格式, 现在我们重新编写一个用于导出atomsk可以识别的种子文件的子程序:</p>
 <pre><code class="lang-fortran">  subroutine WriteAtomsk(array, modelname, xdim, ydim)
     !! 以atomsk可以读取的格式写入文本文件之中
@@ -645,7 +645,7 @@ x方向上长度: 500.00000000000000, y方向上长度: 846.31242221008688
 <pre><code class="lang-shell">atomsk --polycrystal al.lmp gradient.txt final.cfg
 </code></pre>
 <pre><code>     在ovito中查看我们生成的多晶, 这里我们把晶界原子变成蓝色, 这样看起来更明显一些:
-</code></pre><p><img src="/img/test.png" alt=""></p>
+</code></pre><p><img src="D:\blog\betblog\source\img\test.png" alt=""></p>
 <p>​        好的, 非常完美, 现在你已经拥有了一个可以用于生成二维梯度多晶的程序并且已经完全理解且运作的过程了! 完整的源代码和可以在Windows上运行的exe程序:</p>
 <p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1WfS_JH3nTX9JoTs0NG9wYQ">https://pan.baidu.com/s/1WfS_JH3nTX9JoTs0NG9wYQ</a><br>提取码：fsyk<br>—来自百度网盘超级会员V6的分享</p>
 <h1 id="拓展思考"><a href="#拓展思考" class="headerlink" title="拓展思考"></a>拓展思考</h1><p>​        当然, 这个小程序还存在很多的不足, 还有很多可以拓展的空间, 这个程序是我匆忙之间写的, 还可以有很多的优化空间让程序速度更快和更优雅, 此外, 还有很多方向可以进行提高和改善, 比如:</p>
