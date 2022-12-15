@@ -6,12 +6,12 @@
   <meta name="keywords" content=" LAMMPS ">
   <meta name="description" content="LAMMPS-learn-1 | LAMMPS爱好者">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:  ​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以">
+<meta name="description" content="title: 梯度多晶的建模(以二维为例)categories:  LAMMPS基础tags: LAMMPS  梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LAMMPS爱好者">
 <meta property="og:url" content="https://ploou.github.io/2022/12/15/%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6%E7%9A%84%E5%BB%BA%E6%A8%A1(%E4%BB%A5%E4%BA%8C%E7%BB%B4%E4%B8%BA%E4%BE%8B)/index.html">
 <meta property="og:site_name" content="LAMMPS爱好者">
-<meta property="og:description" content="梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次引用:  ​        我师兄是做有限元的, 和分子动力学略有不同, 所以在a图中, hc部分的晶粒分布可以">
+<meta property="og:description" content="title: 梯度多晶的建模(以二维为例)categories:  LAMMPS基础tags: LAMMPS  梯度多晶的建模(以二维为例)​        大家好, 今天为大家带来二维梯度多晶的建模教程, 废话不多说, 首先上结果图:  数学推导和编程思路基本思想​        首先呢, 上示意图, 来更好的解释一下梯度多晶的建模思路, 这张图是我从我师兄的SCI里面扣出来的, 相当于多了一次">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="d:\blog\betblog\source\img\%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
 <meta property="og:image" content="d:\blog\betblog\source\img\%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
@@ -23,7 +23,7 @@
 <meta property="og:image" content="d:\blog\betblog\source\img\gradient5.png">
 <meta property="og:image" content="d:\blog\betblog\source\img\test.png">
 <meta property="article:published_time" content="2022-12-15T11:28:15.844Z">
-<meta property="article:modified_time" content="2022-12-15T11:43:48.715Z">
+<meta property="article:modified_time" content="2022-12-15T11:46:28.406Z">
 <meta property="article:author" content="MD爱好者">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="d:\blog\betblog\source\img\%E6%A2%AF%E5%BA%A6%E5%A4%9A%E6%99%B6.png">
